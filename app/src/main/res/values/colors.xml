@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="colorWhite">#fff</color>
+    <color name="colorBlack">#000</color>
+
+    <color name="colorTitle">#242425</color>
+    <color name="colorSlogan">#848587</color>
+    <color name="colorButton">#40A9FF</color>
+
+    <color name="colorMsg">#c6c6c6</color>
+
+    <color name="colorNormal">#87d068</color>
+    <color name="colorAbnormal">#e82627</color>
+    <color name="colorfen">#ffd8d9</color>
+
+    <color name="colorPointHeader">#1890ff</color>
+    <color name="colorPointfooter">#f6ebbc</color>
+
+
+    <color name="appColor">#f9fafa</color>
+
+
+</resources>

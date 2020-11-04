@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">智慧养殖</string>
+    <string name="scene_msg">----</string>
+    <string name="monitor_title">场景管控</string>
+    <string name="mqtt_title">---数据展示---</string>
+    <string name="datapoint_title">----数据展示----</string>
+    <string name="contorl_title">----传感器控制----</string>
+    <string name="scene_name">智慧养殖</string>
+</resources>

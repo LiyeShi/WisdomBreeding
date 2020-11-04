@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
+
+    <TextView
+        android:id="@+id/data_point_name"
+        android:gravity="center_horizontal"
+        android:text="@string/scene_msg"
+        android:background="@color/colorPointHeader"
+        android:textSize="16sp"
+        android:ellipsize="end"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:textColor="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/data_point_des"
+        android:paddingTop="3dp"
+        android:textSize="13sp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:background="@color/colorPointfooter"
+        android:gravity="center_horizontal"
+        android:text="@string/scene_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/data_point_value"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:background="@color/colorPointfooter"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:text="@string/scene_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

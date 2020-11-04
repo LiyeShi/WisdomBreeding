@@ -1,0 +1,20 @@
+
+¤
+java:S1186•"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Û÷†“üÿÿÿÿ8Ìê»şÓ.
+Ÿ
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(£Óˆõ8Ìê»şÓ.
+K
+java:S1068$".Remove this unused "mTopic_set" private field.(ƒ‹ò8‘±óÁØ.
+
+java:S1186}"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¯ô¢8Ìê»şÓ.
+Ÿ
+java:S1186Ã"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(›¬È 8Ìê»şÓ.
+i	java:S116&"NRename this field "Qos" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‡ºË18Ìê»şÓ.
+K	java:S108…")Either remove or fill this block of code.( „—Íşÿÿÿÿ8‹¹îşÔ.
+£
+java:S1186'"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(·ƒ½Äüÿÿÿÿ8Ìê»şÓ.
+{	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(øñ„”üÿÿÿÿ8Ë±ßşÓ.
+H
+java:S3398º"%Move this method into "MqttListener".(î‘“£øÿÿÿÿ8Ìê»şÓ.
+q	java:S116$"URename this field "mTopic_set" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ƒ‹ò8˜†ĞıÔ.
+r	java:S116#"VRename this field "mTopic_post" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŠœÈé8µµÏıÔ.
