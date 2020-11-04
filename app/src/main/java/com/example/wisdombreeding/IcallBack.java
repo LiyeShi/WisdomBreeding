@@ -11,7 +11,8 @@ package com.example.wisdombreeding;
  */
 public interface IcallBack {
     void sendCommand(String cmd);
-//
+
+    //
 //    void loadListFinish();
 //
 //    void loadLastDataFinish();

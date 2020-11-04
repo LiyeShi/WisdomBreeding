@@ -1,11 +1,22 @@
 package com.example.wisdombreeding.Service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Magnifier;
 import android.widget.Toast;
+
+import com.example.wisdombreeding.activity.MainActivity;
+import com.example.wisdombreeding.bean.FanDataBean;
+import com.example.wisdombreeding.bean.FeedingDataBean;
+import com.example.wisdombreeding.bean.LightDataBean;
+import com.example.wisdombreeding.bean.SmokeDataBean;
+import com.example.wisdombreeding.bean.TemAndHumDataBean;
+import com.google.gson.Gson;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -16,10 +27,13 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * 上行：发布消息
  * 下行：订阅消息
- * */
+ */
 public class MQTTService extends Service {
 
     private static final String TAG = "MQTTService";
@@ -27,15 +41,17 @@ public class MQTTService extends Service {
     private MqttAndroidClient client;
     //   消息代理服务器地址  1883 是MQTT非加密协议端口
     private String serverURL = "tcp://47.92.249.234:1883";
-    //     客户端 ID，用以识别客户端
+    //     客户端 ID，用以识别客户端  平台提供的默认值
     private String clientId = "7cc28801504fee1f0fa0ef3bbc24dd1c";
     //     连接参数设置
     private MqttConnectOptions mConnectOptions;
     //     要发送消息的主题
     private String mTopic_post = "device/347286a627a99a5b/up";
     private String mTopic_set = "device/347286a627a99a5b/down";
-//    发送消息的质量
-    private int Qos =2;
+    //    发送消息的质量
+    private int Qos = 2;
+    private OnDataArrivedListener onDataArrivedListener;
+
     public MQTTService() {
     }
 
@@ -47,7 +63,14 @@ public class MQTTService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Context context = getApplicationContext();
         try {
+//            获取手机的IMEI码作为 客户端id
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(TELEPHONY_SERVICE);
+            clientId = telephonyManager.getDeviceId();
+            if (clientId == null) {
+                clientId = "7cc28801504fee1f0fa0ef3bbc24dd1c";
+            }
 //                  创建客户端
             client = new MqttAndroidClient(getApplicationContext(), serverURL, clientId);
 //                  设置回调
@@ -80,13 +103,14 @@ public class MQTTService extends Service {
     }
 
 
-   public class MyBinder extends Binder {
+    public class MyBinder extends Binder {
         /**
          * 发布消息
+         *
          * @throws MqttException
          */
         public void pushMessage(final String msg) throws MqttException {
-            Log.d(TAG, "pushMessage: message==>"+msg);
+            Log.d(TAG, "pushMessage: message==>" + msg);
             MqttMessage message = new MqttMessage();
             message.setQos(Qos);
             message.setPayload(msg.getBytes());
@@ -94,12 +118,12 @@ public class MQTTService extends Service {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     Log.d(TAG, "onSuccess: 发送成功");
-                    Toast.makeText(getApplicationContext(),"指令成功下达",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "指令成功下达", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Toast.makeText(getApplicationContext(),"消息发送失败，正在重新连接，请稍后重试！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "消息发送失败，正在重新连接，请稍后重试！", Toast.LENGTH_SHORT).show();
                     try {
 
                         client.connect(mConnectOptions, null, new MqttListener());
@@ -108,10 +132,17 @@ public class MQTTService extends Service {
                     }
                     Log.d(TAG, "onFailure: 消息" + msg + "发送失败\n");
                     if (exception != null) {
-                        Log.d(TAG, "onFailure: 消息" + msg + "发送失败\n"+exception.getMessage());
+                        Log.d(TAG, "onFailure: 消息" + msg + "发送失败\n" + exception.getMessage());
                     }
                 }
             });
+        }
+
+        /**
+         * @return
+         */
+        public MQTTService getService() {
+            return MQTTService.this;
         }
 
     }
@@ -130,12 +161,43 @@ public class MQTTService extends Service {
         @Override
         public void messageArrived(String topic, MqttMessage message) {
             String msg = message.toString();
+            Log.d(TAG, "messageArrived: msg==>"+msg);
             if (msg.contains("SUCCESS")) {
 
             } else if (msg.contains("MSG_FREQUENTLY")) {
-                Toast.makeText(getApplicationContext(),"指令发送过于频繁，请重试！",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "指令发送过于频繁，请重试！", Toast.LENGTH_SHORT).show();
             }
-            Log.d(TAG, "messageArrived: 接收到消息==>"+msg);
+            Gson gson = new Gson();
+            if (msg.contains("fan")) {
+//            和通风有关的信息
+                FanDataBean fanDataBean = gson.fromJson(msg, FanDataBean.class);
+                boolean isFan = fanDataBean.getData().getVentilation_sys().isFan();
+                onDataArrivedListener.onReceive(0, String.valueOf(isFan));
+            } else if (msg.contains("floodlight")) {
+//             和灯光有关的信息
+                LightDataBean lightDataBean = gson.fromJson(msg, LightDataBean.class);
+                boolean floodlight = lightDataBean.getData().getLighting_sys().isFloodlight();
+                onDataArrivedListener.onReceive(1, String.valueOf(floodlight));
+            } else if (msg.contains("feeding")) {
+//              和投喂有关的信息
+                FeedingDataBean feedingDataBean = gson.fromJson(msg, FeedingDataBean.class);
+                boolean feeding = feedingDataBean.getData().getFeeding_sys().isFeeding();
+                onDataArrivedListener.onReceive(4, String.valueOf(feeding));
+            } else if (msg.contains("smoke")) {
+ //              和烟雾有关的信息
+                SmokeDataBean smokeDataBean = gson.fromJson(msg, SmokeDataBean.class);
+                int smoke = smokeDataBean.getData().getSmoke_detection_sys().getSmoke();
+                onDataArrivedListener.onReceive(3, String.valueOf(smoke));
+            } else if (msg.contains("temp_hum_det_system")) {
+//              和温湿度有关的信息
+                Log.d(TAG, "messageArrived: 接收到温湿度");
+                TemAndHumDataBean temAndHumDataBean = gson.fromJson(msg, TemAndHumDataBean.class);
+                int temperature = temAndHumDataBean.getData().getTemp_hum_det_system().getTemperature();
+                int humidity = temAndHumDataBean.getData().getTemp_hum_det_system().getHumidity();
+                onDataArrivedListener.onReceive(2, temperature +"℃,"+ humidity+"%");
+            }else{
+
+            }
 
 
         }
@@ -149,15 +211,24 @@ public class MQTTService extends Service {
         public void connectComplete(boolean reconnect, String serverURI) {
 
 
-
         }
     }
+
+    public interface OnDataArrivedListener {
+        void onReceive(int index, String msg);
+    }
+
+    public void setOnMsgArrived(OnDataArrivedListener onDataArrivedListener) {
+        this.onDataArrivedListener = onDataArrivedListener;
+    }
+
+
     class MqttListener implements IMqttActionListener {
 
         @Override
         public void onSuccess(IMqttToken asyncActionToken) {
             Log.d(TAG, "onSuccess: 连接成功");
-            Toast.makeText(getApplicationContext(),"成功与云平台建立连接",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "成功与云平台建立连接", Toast.LENGTH_SHORT).show();
 //            订阅上行主题 接收服务端发送的信息
             try {
                 subscribeTopic(mTopic_post);
@@ -171,7 +242,7 @@ public class MQTTService extends Service {
         @Override
         public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
             Log.d(TAG, "onFailure: 连接失败");
-            Toast.makeText(getApplicationContext(), "与云平台连接失败，请重试！",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "与云平台连接失败，请重试！", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -188,12 +259,12 @@ public class MQTTService extends Service {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
                 Log.d(TAG, "onSuccess: 主题订阅成功");
-              
+
             }
 
             @Override
             public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-               
+
             }
         });
     }

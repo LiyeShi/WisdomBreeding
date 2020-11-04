@@ -1,5 +1,6 @@
 package com.example.wisdombreeding.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,11 +10,12 @@ import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +44,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements IcallBack{
+public class MainActivity extends AppCompatActivity implements IcallBack {
     private static final String TAG = "MainActivity";
 
     private MQTTService.MyBinder mBinder;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements IcallBack{
     private API mApi;
     private TextView mTvDeviceInfo;
     private TextView mTvProductName;
-
+    public ArrayList mData;
 
 
     @Override
@@ -150,6 +152,23 @@ public class MainActivity extends AppCompatActivity implements IcallBack{
 
     }
 
+    /**
+     * 首页更新信息
+     */
+    Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            Bundle data = msg.getData();
+            int index = (int) data.get("index");
+            String msg1 = (String) data.get("msg");
+            Log.d(TAG, "handleMessage: index==>"+index+"\t"+msg1);
+            mData.set(index,msg1);
+            mDataAdapter.notifyDataSetChanged();
+
+
+        }
+    };
 
 
     @Override
@@ -162,6 +181,8 @@ public class MainActivity extends AppCompatActivity implements IcallBack{
 
     }
 
+
+
     /**
      * 模型列表加载完加载模型下的信息
      */
@@ -171,8 +192,8 @@ public class MainActivity extends AppCompatActivity implements IcallBack{
             public void onResponse(Call<CellDataListBean> call, Response<CellDataListBean> response) {
                 if (response.code()== HttpURLConnection.HTTP_OK) {
                     CellDataListBean body = response.body();
-                    ArrayList data = ProcessData(body);
-                    mDataAdapter.setDataList(data);
+                    mData = ProcessData(body);
+                    mDataAdapter.setDataList(mData);
                     mGvData.setAdapter(mDataAdapter);
 
                 }
@@ -229,7 +250,6 @@ public class MainActivity extends AppCompatActivity implements IcallBack{
 //            该模块下尚未上传过数据
                 new_data="暂无数据";
                 dataList.add(new_data);
-
             }
 
         }
@@ -237,6 +257,9 @@ public class MainActivity extends AppCompatActivity implements IcallBack{
         Log.d(TAG, "ProcessData: dataList==>"+dataList.toString());
         return dataList;
     }
+
+
+
 
 
     class Connection implements ServiceConnection {
@@ -249,6 +272,18 @@ public class MainActivity extends AppCompatActivity implements IcallBack{
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mBinder = (MQTTService.MyBinder) service;
+            MQTTService mqttService = mBinder.getService();
+            mqttService.setOnMsgArrived(new MQTTService.OnDataArrivedListener() {
+                @Override
+                public void onReceive(int index, String msg) {
+                    Message message = Message.obtain();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("index",index);
+                    bundle.putString("msg",msg);
+                    message.setData(bundle);
+                    mHandler.sendMessage(message);
+                }
+            });
 
 
 

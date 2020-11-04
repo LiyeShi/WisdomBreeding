@@ -62,6 +62,7 @@ public class DataAdapter extends BaseAdapter {
 
     public void setData(CellDataBean body) {
         this.body = body;
+
     }
 
     public void setDataList(ArrayList body) {
