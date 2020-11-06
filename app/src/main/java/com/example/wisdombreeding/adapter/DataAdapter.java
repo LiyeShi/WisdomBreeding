@@ -2,6 +2,7 @@ package com.example.wisdombreeding.adapter;
 
 import android.content.Context;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,11 @@ public class DataAdapter extends BaseAdapter {
         }
         viewHolder.dataPointName.setText(body.getData().get(position).getName());
         viewHolder.dataPointDes.setText(body.getData().get(position).getModel().get(0).getName());
+        if (mList.get(position).equals("已关闭")) {
+            viewHolder.dataPointValue.setTextColor(Color.RED);
+        }else {
+            viewHolder.dataPointValue.setTextColor(Color.BLACK);
+        }
         viewHolder.dataPointValue.setText(mList.get(position));
         return convertView;
     }

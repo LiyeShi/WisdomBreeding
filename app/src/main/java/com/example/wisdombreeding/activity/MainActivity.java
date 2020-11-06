@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -95,13 +96,13 @@ public class MainActivity extends AppCompatActivity implements IcallBack {
         deviceInfo.enqueue(new Callback<DeviceDataBean>() {
             @Override
             public void onResponse(Call<DeviceDataBean> call, Response<DeviceDataBean> response) {
-                if (response.code()== HttpURLConnection.HTTP_OK) {
-                    DeviceDataBean info=response.body();
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    DeviceDataBean info = response.body();
                     Log.d(TAG, "onResponse: 产品信息返回成功");
                     DeviceDataBean.DataBean data = info.getData();
                     mTvProductName.setText(data.getName());
-                    mTvDeviceInfo.setText("产品类型:"+data.getType_str()+"\t协议类型:"+data.getProtocol_type_str()+"\t报文类型:"+data.getData_type_str() );
-                    
+                    mTvDeviceInfo.setText("产品类型:" + data.getType_str() + "\t协议类型:" + data.getProtocol_type_str() + "\t报文类型:" + data.getData_type_str());
+
                 }
             }
 
@@ -122,9 +123,9 @@ public class MainActivity extends AppCompatActivity implements IcallBack {
         mApi.getCellModelList().enqueue(new Callback<CellDataBean>() {
             @Override
             public void onResponse(Call<CellDataBean> call, Response<CellDataBean> response) {
-                if (response.code()== HttpURLConnection.HTTP_OK) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     CellDataBean body = response.body();
-                    Log.d(TAG, "onResponse: 返回信息==>"+body);
+                    Log.d(TAG, "onResponse: 返回信息==>" + body);
                     mDataAdapter.setData(body);
                     loadListFinish();
                 }
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements IcallBack {
 
     private void initView() {
         mGvData = findViewById(R.id.datapoint_gridview);
-        mGvControl=findViewById(R.id.control_gridview);
+        mGvControl = findViewById(R.id.control_gridview);
         mTvDeviceInfo = findViewById(R.id.tv_device_info);
         mTvProductName = findViewById(R.id.product_name);
 
@@ -155,15 +156,18 @@ public class MainActivity extends AppCompatActivity implements IcallBack {
     /**
      * 首页更新信息
      */
-    Handler mHandler=new Handler(){
+    @SuppressLint("HandlerLeak")
+    Handler mHandler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             Bundle data = msg.getData();
             int index = (int) data.get("index");
             String msg1 = (String) data.get("msg");
-            Log.d(TAG, "handleMessage: index==>"+index+"\t"+msg1);
-            mData.set(index,msg1);
+            Log.d(TAG, "handleMessage: index==>" + index + "\t" + msg1);
+            if (mData != null) {
+                mData.set(index, msg1);
+            }
             mDataAdapter.notifyDataSetChanged();
 
 
@@ -182,7 +186,6 @@ public class MainActivity extends AppCompatActivity implements IcallBack {
     }
 
 
-
     /**
      * 模型列表加载完加载模型下的信息
      */
@@ -190,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements IcallBack {
         mApi.getCellDataList().enqueue(new Callback<CellDataListBean>() {
             @Override
             public void onResponse(Call<CellDataListBean> call, Response<CellDataListBean> response) {
-                if (response.code()== HttpURLConnection.HTTP_OK) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
                     CellDataListBean body = response.body();
                     mData = ProcessData(body);
                     mDataAdapter.setDataList(mData);
@@ -209,63 +212,71 @@ public class MainActivity extends AppCompatActivity implements IcallBack {
     private ArrayList<String> ProcessData(CellDataListBean body) {
         List<CellDataListBean.DataBean> beanList = body.getData();
         ArrayList<String> dataList = new ArrayList<>();
-         String[] split;
+        String[] split;
         String new_data;
         for (int i = 0; i < beanList.size(); i++) {
             CellDataListBean.DataBean dataBean = beanList.get(i);
-            Log.d(TAG, "ProcessData: dataBean==>"+dataBean);
+            Log.d(TAG, "ProcessData: dataBean==>" + dataBean);
             if (dataBean.getNew_data() != null) {
 //                能够获取到该模块下的模型数据
-                new_data= dataBean.getNew_data().getContent();
-                Log.d(TAG, "ProcessData: new_data==>"+new_data);
+                new_data = dataBean.getNew_data().getContent();
+                Log.d(TAG, "ProcessData: new_data==>" + new_data);
 //           下面是处理数据的过程 先去掉花括号
                 new_data = new_data.substring(1, new_data.length() - 1);
 //            分离模型数据
                 split = new_data.split(",");
-                Log.d(TAG, "ProcessData: split==>"+ Arrays.toString(split)+ split.length);
+                Log.d(TAG, "ProcessData: split==>" + Arrays.toString(split) + split.length);
 //            处理每一个模型下的数据
-                StringBuffer stringBuffer=new StringBuffer();
+                StringBuffer stringBuffer = new StringBuffer();
 //            说明该模块下有两个模型数据
                 if (split.length == 2) {
                     for (int j = 0; j < split.length; j++) {
                         String s = split[j];
                         String[] strings = s.split("\":");
-                        Log.d(TAG, "ProcessData: strings==>"+Arrays.toString(strings));
-                        if (j==0) {
-                            stringBuffer = stringBuffer.append(strings[1]+"℃,");
-                        }else {
-                            stringBuffer=stringBuffer.append(strings[1]+"%");
+                        Log.d(TAG, "ProcessData: strings==>" + Arrays.toString(strings));
+                        if (j == 0) {
+                            stringBuffer = stringBuffer.append(strings[1] + "℃,");
+                        } else {
+                            stringBuffer = stringBuffer.append(strings[1] + "%");
                         }
 
                     }
                     dataList.add(stringBuffer.toString());
-                }else if (split.length==1){
+                } else if (split.length == 1) {
 //                说明该模块下只有一个数据，直接用：切割
                     String[] strings = split[0].split(":");
-                    dataList.add(strings[1]);
-                }else{
-                    Toast.makeText(this,"数据异常",Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "ProcessData: 结果==》" + strings[1]);
+//                    用中文显示
+                    if ("true".equals(strings[1])) {
+                        dataList.add("已开启");
+                    } else if ("false".equals(strings[1])) {
+
+                        dataList.add("已关闭");
+
+                    } else {
+                        dataList.add(strings[1]);
+                    }
+                } else {
+                    Toast.makeText(this, "数据异常", Toast.LENGTH_SHORT).show();
                 }
-            }else {
+            } else {
 //            该模块下尚未上传过数据
-                new_data="暂无数据";
+                new_data = "暂无数据";
                 dataList.add(new_data);
             }
 
         }
-        Log.d(TAG, "ProcessData: dataListSize==>"+dataList.size());
-        Log.d(TAG, "ProcessData: dataList==>"+dataList.toString());
+        Log.d(TAG, "ProcessData: dataListSize==>" + dataList.size());
+        Log.d(TAG, "ProcessData: dataList==>" + dataList.toString());
         return dataList;
     }
-
-
-
 
 
     class Connection implements ServiceConnection {
 
         /**
          * 服务成功连接时调用
+         *
          * @param name
          * @param service
          */
@@ -278,19 +289,19 @@ public class MainActivity extends AppCompatActivity implements IcallBack {
                 public void onReceive(int index, String msg) {
                     Message message = Message.obtain();
                     Bundle bundle = new Bundle();
-                    bundle.putInt("index",index);
-                    bundle.putString("msg",msg);
+                    bundle.putInt("index", index);
+                    bundle.putString("msg", msg);
                     message.setData(bundle);
                     mHandler.sendMessage(message);
                 }
             });
 
 
-
         }
 
         /**
          * 服务失去连接的时候调用
+         *
          * @param name
          */
         @Override

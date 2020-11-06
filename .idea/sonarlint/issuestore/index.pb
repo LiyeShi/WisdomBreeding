@@ -54,10 +54,6 @@ Z
 *app/src/main/res/layout/activity_login.xml,1\f\1f7e901185d74bf05f9fcb38f9ed35ea78cd4c6e
 Y
 )app/src/main/res/layout/activity_main.xml,7\6\76b07e40f24cce093536731477540f12e7da3cb6
-X
-(app/src/main/res/layout/control_item.xml,5\3\535f333ee1c617cb0d6610a1eec7c8c26211f2b1
-Z
-*app/src/main/res/layout/data_show_item.xml,c\d\cdf2a73a2c79dcf6bf725a5dbe85b0efb10dc4fa
 R
 "app/src/main/res/values/colors.xml,9\6\969faa2a5d9f5e8390e958d2c07f2cfd54676e6b
 S
@@ -80,3 +76,5 @@ x
 Happ/src/main/java/com/example/wisdombreeding/bean/TemAndHumDataBean.java,3\f\3fb71ddbc090ba82820bce81186602ded40b449b
 t
 Dapp/src/main/java/com/example/wisdombreeding/bean/SmokeDataBean.java,2\1\211027f73054744993ff2b788460db1fdee2b8f4
+@
+local.properties,0\7\0712df971a99ac4d2fccb8e0fb19f377f3374cca

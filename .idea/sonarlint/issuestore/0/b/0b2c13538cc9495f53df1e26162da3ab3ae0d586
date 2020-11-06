@@ -1,35 +1,23 @@
 
-Ÿ
-java:S1186Ç"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(£Óˆõ8®Å·–Ù.
-T
-java:S1481À"6Remove this unused "temAndHumDataBean" local variable.(­œ±§8®Å·–Ù.
-Ÿ
-java:S1186š"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¯ô¢8Ìê»şÓ.
-K	java:S108¢")Either remove or fill this block of code.( „—Íşÿÿÿÿ8‹¹îşÔ.
-£
-java:S11865"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(·ƒ½Äüÿÿÿÿ8Ìê»şÓ.
-R
-java:S1128
-"5Remove this unused import 'android.widget.Magnifier'.(Úõ²8Ï»¾”Ù.
-M
-java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ8“µà•Ù.
-q	java:S1161"URename this field "mTopic_set" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ƒ‹ò8˜†ĞıÔ.
-P
-java:S1128".Remove this unused import 'java.util.HashMap'.(™˜”€ùÿÿÿÿ8Ç¼›–Ù.
-i	java:S1163"NRename this field "Qos" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‡ºË18Ìê»şÓ.
-P
-java:S1874D"3Remove this use of "getDeviceId"; it is deprecated.(»ØÛĞ8Ğ¿—”Ù.
-¤
-java:S1186Ì"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Û÷†“üÿÿÿÿ8®Å·–Ù.
-K
-java:S10681".Remove this unused "mTopic_set" private field.(ƒ‹ò8‘±óÁØ.
-H
-java:S3398ı"%Move this method into "MqttListener".(î‘“£øÿÿÿÿ8®Å·–Ù.
-t
-java:S1450,"WRemove the "clientId" field and declare it as a local variable in the relevant methods.(‡‘ÎÚ8ÛÉŸ”Ù.
-r	java:S1160"VRename this field "mTopic_post" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŠœÈé8µµÏıÔ.
+i	java:S116/"NRename this field "Qos" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‡ºË18Ìê»şÓ.
 {	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(øñ„”üÿÿÿÿ8Ë±ßşÓ.
+F	java:S108Á")Either remove or fill this block of code.(å¥‡8åÕê™Ù.
+K	java:S108 ")Either remove or fill this block of code.( „—Íşÿÿÿÿ8‹¹îşÔ.
 Ÿ
-java:S1186†"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(›¬È 8®Å·–Ù.
-j
-java:S1128"MRemove this unused import 'com.example.wisdombreeding.activity.MainActivity'.(ÕĞ 8®Îô–Ù.
+java:S1186…"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(›¬È 8®Å·–Ù.
+Ÿ
+java:S1186É"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(£Óˆõ8®Å·–Ù.
+Ÿ
+java:S1186—"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¯ô¢8Ìê»şÓ.
+£
+java:S11862"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(·ƒ½Äüÿÿÿÿ8Ìê»şÓ.
+K
+java:S1068-".Remove this unused "mTopic_set" private field.(ƒ‹ò8‘±óÁØ.
+H
+java:S3398ü"%Move this method into "MqttListener".(î‘“£øÿÿÿÿ8®Å·–Ù.
+q	java:S116-"URename this field "mTopic_set" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ƒ‹ò8˜†ĞıÔ.
+r	java:S116,"VRename this field "mTopic_post" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŠœÈé8µµÏıÔ.
+t
+java:S1450("WRemove the "clientId" field and declare it as a local variable in the relevant methods.(‡‘ÎÚ8å‡ÅàÙ.
+¤
+java:S1186Î"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Û÷†“üÿÿÿÿ8®Å·–Ù.

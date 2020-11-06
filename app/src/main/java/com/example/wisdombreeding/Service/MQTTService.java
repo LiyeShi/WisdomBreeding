@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.telephony.TelephonyManager;
+import android.provider.Settings;
 import android.util.Log;
-import android.widget.Magnifier;
 import android.widget.Toast;
 
-import com.example.wisdombreeding.activity.MainActivity;
 import com.example.wisdombreeding.bean.FanDataBean;
 import com.example.wisdombreeding.bean.FeedingDataBean;
 import com.example.wisdombreeding.bean.LightDataBean;
@@ -26,9 +24,6 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * 上行：发布消息
@@ -65,9 +60,9 @@ public class MQTTService extends Service {
         super.onCreate();
         Context context = getApplicationContext();
         try {
-//            获取手机的IMEI码作为 客户端id
-            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(TELEPHONY_SERVICE);
-            clientId = telephonyManager.getDeviceId();
+//            设置不同的客户端id
+            clientId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            Log.d(TAG, "onCreate: clientId==>" + clientId);
             if (clientId == null) {
                 clientId = "7cc28801504fee1f0fa0ef3bbc24dd1c";
             }
@@ -161,30 +156,33 @@ public class MQTTService extends Service {
         @Override
         public void messageArrived(String topic, MqttMessage message) {
             String msg = message.toString();
-            Log.d(TAG, "messageArrived: msg==>"+msg);
+            Log.d(TAG, "messageArrived: msg==>" + msg);
             if (msg.contains("SUCCESS")) {
 
             } else if (msg.contains("MSG_FREQUENTLY")) {
                 Toast.makeText(getApplicationContext(), "指令发送过于频繁，请重试！", Toast.LENGTH_SHORT).show();
             }
             Gson gson = new Gson();
+            String state = "";
             if (msg.contains("fan")) {
 //            和通风有关的信息
                 FanDataBean fanDataBean = gson.fromJson(msg, FanDataBean.class);
                 boolean isFan = fanDataBean.getData().getVentilation_sys().isFan();
-                onDataArrivedListener.onReceive(0, String.valueOf(isFan));
+                state = conversionToChinese(isFan);
+                onDataArrivedListener.onReceive(0, state);
             } else if (msg.contains("floodlight")) {
 //             和灯光有关的信息
                 LightDataBean lightDataBean = gson.fromJson(msg, LightDataBean.class);
                 boolean floodlight = lightDataBean.getData().getLighting_sys().isFloodlight();
-                onDataArrivedListener.onReceive(1, String.valueOf(floodlight));
+                state = conversionToChinese(floodlight);
+                onDataArrivedListener.onReceive(1, state);
             } else if (msg.contains("feeding")) {
 //              和投喂有关的信息
                 FeedingDataBean feedingDataBean = gson.fromJson(msg, FeedingDataBean.class);
                 boolean feeding = feedingDataBean.getData().getFeeding_sys().isFeeding();
-                onDataArrivedListener.onReceive(4, String.valueOf(feeding));
+                onDataArrivedListener.onReceive(4, conversionToChinese(feeding));
             } else if (msg.contains("smoke")) {
- //              和烟雾有关的信息
+                //              和烟雾有关的信息
                 SmokeDataBean smokeDataBean = gson.fromJson(msg, SmokeDataBean.class);
                 int smoke = smokeDataBean.getData().getSmoke_detection_sys().getSmoke();
                 onDataArrivedListener.onReceive(3, String.valueOf(smoke));
@@ -194,8 +192,8 @@ public class MQTTService extends Service {
                 TemAndHumDataBean temAndHumDataBean = gson.fromJson(msg, TemAndHumDataBean.class);
                 int temperature = temAndHumDataBean.getData().getTemp_hum_det_system().getTemperature();
                 int humidity = temAndHumDataBean.getData().getTemp_hum_det_system().getHumidity();
-                onDataArrivedListener.onReceive(2, temperature +"℃,"+ humidity+"%");
-            }else{
+                onDataArrivedListener.onReceive(2, temperature + "℃," + humidity + "%");
+            } else {
 
             }
 
@@ -212,6 +210,22 @@ public class MQTTService extends Service {
 
 
         }
+    }
+
+    /**
+     * 将true false 改成 开启 关闭
+     *
+     * @param rawState
+     * @return
+     */
+    private String conversionToChinese(boolean rawState) {
+        String state;
+        if (String.valueOf(rawState).equals("false")) {
+            state = "已关闭";
+        } else {
+            state = "已开启";
+        }
+        return state;
     }
 
     public interface OnDataArrivedListener {
@@ -232,6 +246,7 @@ public class MQTTService extends Service {
 //            订阅上行主题 接收服务端发送的信息
             try {
                 subscribeTopic(mTopic_post);
+                subscribeTopic(mTopic_set);
             } catch (MqttException e) {
                 e.printStackTrace();
             }

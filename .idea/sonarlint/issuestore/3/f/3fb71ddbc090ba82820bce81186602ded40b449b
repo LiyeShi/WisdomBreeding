@@ -1,0 +1,5 @@
+
+z	java:S1162"^Rename this field "temp_hum_det_system" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÝÙÅ¦8¨»â”Ù.
+m	java:S1178"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(œ’©š8¨»â”Ù.
+j	java:S1004"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(œÆÂô8¨»â”Ù.
+j	java:S1008"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(œ’©š8¨»â”Ù.

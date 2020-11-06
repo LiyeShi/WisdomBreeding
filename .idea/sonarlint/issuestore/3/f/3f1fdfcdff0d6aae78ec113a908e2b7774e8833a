@@ -1,17 +1,17 @@
 
 G
 java:S1068"+Remove this unused "context" private field.(êİç8Ğê»şÓ.
-v
-java:S1104J"YMake dataPointName a static final constant or non-public and provide accessors if needed.(¶Õê8Ğê»şÓ.
-z
-java:S1104L"XMake dataPointDes a static final constant or non-public and provide accessors if needed.(ãÛƒÅÿÿÿÿÿ8Ğê»şÓ.
-L
-java:S3740D"/Provide the parametrized type for this generic.(ƒ®¹ê8Ñúá€Ô.
-v
-java:S1104I"TMake rootView a static final constant or non-public and provide accessors if needed.(“¾Ê¥øÿÿÿÿ8Ğê»şÓ.
 |
 java:S1104K"ZMake dataPointValue a static final constant or non-public and provide accessors if needed.(„Å­ùûÿÿÿÿ8Ğê»şÓ.
-D
-java:S1068"'Remove this unused "TAG" private field.(ë°Şú8Ğê»şÓ.
 Œ
 java:S1319D"oThe type of the "body" object should be an interface such as "List" rather than the implementation "ArrayList".(ƒ®¹ê8Ñúá€Ô.
+v
+java:S1104I"TMake rootView a static final constant or non-public and provide accessors if needed.(“¾Ê¥øÿÿÿÿ8Ğê»şÓ.
+v
+java:S1104J"YMake dataPointName a static final constant or non-public and provide accessors if needed.(¶Õê8Ğê»şÓ.
+D
+java:S1068"'Remove this unused "TAG" private field.(ë°Şú8Ğê»şÓ.
+L
+java:S3740D"/Provide the parametrized type for this generic.(ƒ®¹ê8Ñúá€Ô.
+z
+java:S1104L"XMake dataPointDes a static final constant or non-public and provide accessors if needed.(ãÛƒÅÿÿÿÿÿ8Ğê»şÓ.
