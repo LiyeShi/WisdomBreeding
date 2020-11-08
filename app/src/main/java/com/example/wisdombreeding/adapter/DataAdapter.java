@@ -1,7 +1,5 @@
 package com.example.wisdombreeding.adapter;
 
-import android.content.Context;
-
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.wisdombreeding.bean.CellDataBean;
 import com.example.wisdombreeding.R;
+import com.example.wisdombreeding.bean.CellDataBean;
 
 import java.util.ArrayList;
 
@@ -24,7 +22,6 @@ import java.util.ArrayList;
  */
 public class DataAdapter extends BaseAdapter {
     private static final String TAG = "DataAdapter";
-    private Context context;
     private CellDataBean body;
     private ArrayList<String> mList;
 
@@ -87,7 +84,6 @@ public class DataAdapter extends BaseAdapter {
             this.dataPointName = rootView.findViewById(R.id.data_point_name);
             this.dataPointValue = rootView.findViewById(R.id.data_point_value);
             this.dataPointDes = rootView.findViewById(R.id.data_point_des);
-
         }
 
     }

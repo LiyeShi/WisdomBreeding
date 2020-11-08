@@ -4,15 +4,17 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.wisdombreeding.IcallBack;
 import com.example.wisdombreeding.activity.MainActivity;
+
 import com.example.wisdombreeding.R;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
  * version: 1.0
  */
 public class ControlAdapter extends BaseAdapter {
-
+    private static final String TAG = "ControlAdapter";
     private Context mContext;
     private  ArrayList<String> mInstructionNameList;
     private  ArrayList<String> mInstructionList;
@@ -82,10 +84,11 @@ public class ControlAdapter extends BaseAdapter {
         }
 
         viewHolder.controlName.setText(mInstructionNameList.get(position));
-        // 控制器控制
+        // 控制器控制   投喂饲料按钮 因为没有平台信息反馈 所以自己控制时间 更新UI
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "onClick:position==》"+position);
                 AlertDialog alertDialog2 = new AlertDialog.Builder(mContext)
                         .setTitle("确认操作")
                         .setIcon(R.drawable.yiwen)
@@ -106,6 +109,17 @@ public class ControlAdapter extends BaseAdapter {
                         })
                         .create();
                 alertDialog2.show();
+//                说明点击的是投喂饲料按钮
+                if (position == mInstructionNameList.size()-1) {
+                    Message message = Message.obtain();
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("index", 4);
+                    bundle.putString("msg", "正在投喂...");
+                    message.setData(bundle);
+                    mActivity.mHandler.sendMessage(message);
+                    Log.d(TAG, "onClick: ");
+                    Log.d(TAG, "onClick: 点击了投喂饲料按钮");
+                }
             }
         });
         return convertView;

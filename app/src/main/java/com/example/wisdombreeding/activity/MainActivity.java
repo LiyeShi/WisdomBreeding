@@ -57,12 +57,15 @@ public class MainActivity extends AppCompatActivity implements IcallBack {
     private TextView mTvDeviceInfo;
     private TextView mTvProductName;
     public ArrayList mData;
+    public Handler mHandler;
 
 
+    @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "onCreate: log");
         setFullScreen();
         initView();
         initListener();
@@ -75,6 +78,28 @@ public class MainActivity extends AppCompatActivity implements IcallBack {
         startService(intent);
         bindService(intent, new Connection(), BIND_AUTO_CREATE);
         mGvControl.setAdapter(new ControlAdapter(this));
+
+        /**
+         * 发送指令后首页更新信息
+         */
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                Bundle data = msg.getData();
+                Log.d(TAG, "handleMessage: msg==>"+msg);
+                Log.d(TAG, "handleMessage: data=>"+data.toString());
+                int index = 0;
+                if ( data != null&&mData!=null) {
+                    index= (int) data.get("index");
+                    String msg1 = (String) data.get("msg");
+                    Log.d(TAG, "handleMessage: index==>" + index + "\t" + msg1);
+                    mData.set(index, msg1);
+                }
+                mDataAdapter.notifyDataSetChanged();
+            }
+        };
+
 
     }
 
@@ -152,27 +177,6 @@ public class MainActivity extends AppCompatActivity implements IcallBack {
 
 
     }
-
-    /**
-     * 首页更新信息
-     */
-    @SuppressLint("HandlerLeak")
-    Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            Bundle data = msg.getData();
-            int index = (int) data.get("index");
-            String msg1 = (String) data.get("msg");
-            Log.d(TAG, "handleMessage: index==>" + index + "\t" + msg1);
-            if (mData != null) {
-                mData.set(index, msg1);
-            }
-            mDataAdapter.notifyDataSetChanged();
-
-
-        }
-    };
 
 
     @Override

@@ -1,5 +1,5 @@
 
-m	java:S1178"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ìå¦8«è”Ù.
 	java:S1162"^Rename this field "smoke_detection_sys" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ö›áÇüÿÿÿÿ8«è”Ù.
+m	java:S1178"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ìå¦8«è”Ù.
 j	java:S1004"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(’ùŞ·8«è”Ù.
 j	java:S1008"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ìå¦8«è”Ù.
